@@ -11,10 +11,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+
+  // text controller
+  final _mycontroller = TextEditingController();
   // list of todo tasks
   List todoList = [
-     ["make tutorial", false],
-    ["do exercise", false],
   ];
 
   // checkbox was tapped
@@ -23,13 +24,23 @@ class _HomePageState extends State<HomePage> {
       todoList[index][1] = !todoList[index][1];
     });
   }
+  void saveNewTask(){
+    setState(() {
+      todoList.add([_mycontroller.text,false]);
+    });
+    Navigator.of(context).pop();
+  }
 
   // create a new task
   void createnewTask(){
     showDialog(
         context: context,
         builder: (context){
-          return DialogBox();
+          return DialogBox(
+            controller: _mycontroller,
+            onSave: saveNewTask,
+            onCancel: () => Navigator.of(context).pop(),
+          );
     },
     );
   }
