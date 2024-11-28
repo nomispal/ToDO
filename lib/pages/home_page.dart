@@ -44,6 +44,14 @@ class _HomePageState extends State<HomePage> {
     },
     );
   }
+
+  // delete task function
+  void DeleteFunction(int index){
+    setState(() {
+      todoList.removeAt(index);
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepOrange[200],
@@ -65,6 +73,7 @@ class _HomePageState extends State<HomePage> {
               taskName: todoList[index][0],
               taskCompleted: todoList[index][1],
               onChanged: (value) => checkboxChanged(value,index),
+              deleteTile:(context) => DeleteFunction(index),
           );
           },
       ),
