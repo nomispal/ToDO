@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:todo/components/dialog_box.dart';
 import 'package:todo/components/todo_tile.dart';
+import 'package:todo/data/database.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,24 +13,39 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  @override
+  void initState() {
+    // if this is the first time opening the app, then create default data
+    if(_mybox.get("TODOLIST")==null){
+      db.createIntialData();
+    }else{
+      //there is always exists data
+      db.loadData();
+    }
+  }
+
+  // refrence the box
+  final _mybox = Hive.box("mybox");
+
 
   // text controller
   final _mycontroller = TextEditingController();
-  // list of todo tasks
-  List todoList = [
-  ];
 
+  ToDoDataBase db = ToDoDataBase();
   // checkbox was tapped
   void checkboxChanged(bool? value, int index){
     setState(() {
-      todoList[index][1] = !todoList[index][1];
+      db.toDoList[index][1] = !db.toDoList[index][1];
     });
+    db.updateDataBase();
   }
   void saveNewTask(){
     setState(() {
-      todoList.add([_mycontroller.text,false]);
+      db.toDoList.add([_mycontroller.text,false]);
     });
     Navigator.of(context).pop();
+    db.updateDataBase();
+
   }
 
   // create a new task
@@ -43,13 +60,16 @@ class _HomePageState extends State<HomePage> {
           );
     },
     );
+    db.updateDataBase();
+
   }
 
   // delete task function
   void DeleteFunction(int index){
     setState(() {
-      todoList.removeAt(index);
+      db.toDoList.removeAt(index);
     });
+    db.updateDataBase();
   }
 
   Widget build(BuildContext context) {
@@ -67,11 +87,11 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.deepOrange[400],
       ),
       body: ListView.builder(
-        itemCount: todoList.length,
+        itemCount: db.toDoList.length,
           itemBuilder: (context, index) {
           return ToDoTile(
-              taskName: todoList[index][0],
-              taskCompleted: todoList[index][1],
+              taskName:db.toDoList[index][0],
+              taskCompleted: db.toDoList[index][1],
               onChanged: (value) => checkboxChanged(value,index),
               deleteTile:(context) => DeleteFunction(index),
           );
