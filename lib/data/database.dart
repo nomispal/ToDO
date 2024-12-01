@@ -10,8 +10,8 @@ class ToDoDataBase {
   // run this method for openning first time this app
   void createIntialData() {
     toDoList = [
-      {"Learn Flutter" , false},
-      {"Do Exercise", false},
+      ["Learn Flutter" , false],
+      ["Do Exercise", false],
     ];
   }
 

@@ -13,6 +13,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+
+  // refrence the box
+  final _mybox = Hive.box("mybox");
+  ToDoDataBase db = ToDoDataBase();
+
   @override
   void initState() {
     // if this is the first time opening the app, then create default data
@@ -24,14 +29,11 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // refrence the box
-  final _mybox = Hive.box("mybox");
 
 
   // text controller
   final _mycontroller = TextEditingController();
 
-  ToDoDataBase db = ToDoDataBase();
   // checkbox was tapped
   void checkboxChanged(bool? value, int index){
     setState(() {
